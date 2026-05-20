@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id                  Int      @id @default(autoincrement())
+  name                String
+  email               String   @unique
+  phone               String
+  tradingviewUsername String   @map("tradingview_username")
+  plan                String
+  paymentId           String   @unique @map("payment_id")
+  paymentStatus       String   @map("payment_status")
+  accessGranted       Boolean  @default(false) @map("access_granted")
+  expiresAt           DateTime @map("expires_at")
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  @@map("customers")
+}
+
+model WebinarRegistrant {
+  id              Int      @id @default(autoincrement())
+  name            String
+  email           String
+  whatsapp        String
+  webinarDate     DateTime @map("webinar_date")
+  registeredAt    DateTime @default(now()) @map("registered_at")
+  
+  // Tracking flags
+  sentWelcome     Boolean  @default(false) @map("sent_welcome")
+  sentOneDay      Boolean  @default(false) @map("sent_one_day")
+  sentFifteenMin  Boolean  @default(false) @map("sent_fifteen_min")
+
+  @@map("webinar_registrants")
+}
